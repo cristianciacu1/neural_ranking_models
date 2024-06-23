@@ -10,7 +10,7 @@ Running the experiments only requires having Conda installed on your machine. Gi
 Furthermore, it is important to note that indexing using either uniCOIL or DeepImpact requires a CUDA-compatible GPU on the machine. This is a hard requirement of the SPRINT library. Yet, the other indexers do not require a GPU, but indexing documents for a neural retriever on a CPU is slow. Hence, using a GPU is recommended for indexing. On the other hand, evaluations on all models, except for the bi-encoder-based ones, is rather fast, while for the bi-encoder models, a GPU acceleration would be beneficial.
 
 #### Datasets
-The datasets used for the evaluations were retrieved from IR-Datasets using the functionality provided by PyTerrier. 
+The datasets used for the evaluations were retrieved from IR-Datasets(https://ir-datasets.com/) using the functionality provided by PyTerrier (https://github.com/terrier-org/pyterrier). 
 
 
 #### Created indexes
