@@ -7,7 +7,6 @@ dense_indexes/
 sparse_indexes/
 queries/
 runs/
-indexing/
 backup_trec_runs/
 trec_runs/
 trec_runs_first_stage/
