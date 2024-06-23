@@ -1,5 +1,5 @@
 ### Neural Ranking Models
-This code was submitted together with my Bachelor Thesis "The Impact of the Retrieval Stage in Interpolation-based Re-Ranking". In my the thesis, I explored different sparse retrievers, retrievers that employ standard statistical term-weighting and retrievers that employ neural networks for term-weighting and document expansion, on various datasets. Furthermore, I used these models in Fast-Forward Indexes, an interpolation-based re-ranking setting, with the goal to understand the impact of the retrieval stage on the overall performance of the framework.
+This code was submitted together with my Bachelor Thesis "The Impact of the Retrieval Stage in Interpolation-based Re-Ranking". In my the thesis, I explored different sparse retrievers, retrievers that employ standard statistical term-weighting and retrievers that employ neural networks for term-weighting and document expansion, on various datasets. Furthermore, I used these models in Fast-Forward Indexes, an interpolation-based re-ranking framework, with the goal to understand the impact of the retrieval stage on the overall performance of the framework.
 
 #### Dependencies
 Running the experiments only requires having Conda installed on your machine. Given that Conda is installed, the following three Conda environments need to be created:
