@@ -8,9 +8,13 @@ from tqdm import tqdm
 import argparse
 
 ## How to run
-# 0. conda activate splade_final
-# 1. python evaluate_performance.py -i 0 -s true
-# 2. python evaluate_performance.py -i 0
+# 0. conda activate rp-splade
+
+# To get the TREC file of a run, use the command below
+# python evaluate_performance_first_stage.py -i 0 -s true
+
+# To evaluate the models on a dataset, use the command below
+# python evaluate_performance_first_stage.py -i 0
 
 class SwapQueries(pt.Transformer):
     def __init__(self):

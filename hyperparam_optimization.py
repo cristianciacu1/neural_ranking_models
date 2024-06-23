@@ -1,14 +1,19 @@
-import torch
 import pyterrier as pt
 from pathlib import Path
 from pyterrier.measures import RR, nDCG, MAP, R, MRR
-from fast_forward.encoder import TCTColBERTQueryEncoder, TCTColBERTDocumentEncoder, TransformerEncoder
+from fast_forward.encoder import TCTColBERTQueryEncoder
 from fast_forward import Mode
 from custom_ff_disk import OnDiskIndex
 from fast_forward.util.pyterrier import FFScore, FFInterpolate
 import ast
 import pandas as pd
 import argparse
+
+## How to run
+# 0. conda activate rp-splade
+
+# 1. python hyperparameter_optimization.py -i x
+# where x is the index of the desired dataset from the list below
 
 # Dataset names (human readable format)
 dataset_names = ['fiqa', 'nfcorpus', 'scifact', 'quora', 'hotpotqa', 'dbpedia', 'fever', 'msmarco-passage']
@@ -104,6 +109,10 @@ def write_to_file(model_name, model, dataset_name, evalset, topics, qrels, alpha
     best_alpha = -1
     best_score = -1
 
+    eval_metrics = [R@1000, MRR@10, MAP@1000, nDCG@10]
+    if dataset_name == 'msmarco-passage':
+        eval_metrics = [R@1000, MRR(rel=2)@10, MAP(rel=2)@1000, nDCG@10]
+
     from tqdm import tqdm
     with tqdm(total=len(alphas), desc=f"{model_name}, {dataset_name}", unit="alpha") as pbar:
         for alpha in alphas:
@@ -126,7 +135,7 @@ def write_to_file(model_name, model, dataset_name, evalset, topics, qrels, alpha
                     qrels,
                     batch_size=100,
                     filter_by_qrels=True,
-                    eval_metrics=[R@1000, MRR@10, MAP@1000, nDCG@10],
+                    eval_metrics=eval_metrics,
                     names=[f'{model_name}, {dataset_name}']
                 )
             else:
@@ -142,7 +151,7 @@ def write_to_file(model_name, model, dataset_name, evalset, topics, qrels, alpha
                     qrels,
                     batch_size=100,
                     filter_by_qrels=True,
-                    eval_metrics=[R@1000, MRR@10, MAP@1000, nDCG@10],
+                    eval_metrics=eval_metrics,
                     names=[f"{model_name}, {dataset_name}"]
                 )
 

@@ -12,9 +12,13 @@ from tqdm import tqdm
 import argparse
 
 ## How to run
-# 0. conda activate splade_final
-# 1. python evaluate_performance.py -i 0 -s true
-# 2. python evaluate_performance.py -i 0
+# 0. conda activate rp-splade
+
+# To get the TREC file of a run, use the command below
+# python evaluate_performance.py -i 0 -s true
+
+# To evaluate the models on a dataset, use the command below
+# python evaluate_performance.py -i 0
 
 class SwapQueries(pt.Transformer):
     def __init__(self):
@@ -154,50 +158,50 @@ def main():
     testset = pt.get_dataset(testset_name)
 
     # Load sparse indexes
-    # index_ref = pt.IndexFactory.of(Path(sparse_index).resolve().as_posix())
-    # deepct_index_ref = pt.IndexFactory.of(Path(sparse_index + "_deepct").resolve().as_posix())
-    # splade_index_ref = pt.IndexFactory.of(Path(sparse_index + "_splade").resolve().as_posix())
+    index_ref = pt.IndexFactory.of(Path(sparse_index).resolve().as_posix())
+    deepct_index_ref = pt.IndexFactory.of(Path(sparse_index + "_deepct").resolve().as_posix())
+    splade_index_ref = pt.IndexFactory.of(Path(sparse_index + "_splade").resolve().as_posix())
 
     # Retrieval models
-    # bm25 = pt.BatchRetrieve(index_ref, wmodel="BM25") % 1000
-    # tf_idf = pt.BatchRetrieve(index_ref, wmodel="TF_IDF") % 1000
-    # deep_ct = pt.BatchRetrieve(deepct_index_ref, wmodel="BM25") % 1000
-    # splade = factory.query() >> pt.BatchRetrieve(splade_index_ref, wmodel="Tf") % 1000
+    bm25 = pt.BatchRetrieve(index_ref, wmodel="BM25") % 1000
+    tf_idf = pt.BatchRetrieve(index_ref, wmodel="TF_IDF") % 1000
+    deep_ct = pt.BatchRetrieve(deepct_index_ref, wmodel="BM25") % 1000
+    splade = factory.query() >> pt.BatchRetrieve(splade_index_ref, wmodel="Tf") % 1000
 
     # Alpha values
-    # alpha_bm25 = read_alpha('bm25', dataset_name)
-    # alpha_tfidf = read_alpha('tf_idf', dataset_name)
-    # alpha_deepct = read_alpha('deepct', dataset_name)
-    # alpha_splade = read_alpha('splade', dataset_name)
+    alpha_bm25 = read_alpha('bm25', dataset_name)
+    alpha_tfidf = read_alpha('tf_idf', dataset_name)
+    alpha_deepct = read_alpha('deepct', dataset_name)
+    alpha_splade = read_alpha('splade', dataset_name)
 
-    # if dataset_name in ['dbpedia', 'fever']:
-    #     ff_bm25 = bm25 % 1000 >> Decoder() >> ff_score >> FFInterpolate(alpha_bm25)
-    #     ff_tf_idf = tf_idf % 1000 >> Decoder() >> ff_score >> FFInterpolate(alpha_tfidf)
-    #     ff_deepct = deep_ct % 1000 >> Decoder() >> SwapQueries() >> ff_score >> FFInterpolate(alpha_deepct)
-    #     ff_splade = splade % 1000 >> Decoder() >> SwapQueries() >> ff_score >> FFInterpolate(alpha_splade)
-    # else:
-    #     ff_bm25 = bm25 % 1000 >> ff_score >> FFInterpolate(alpha_tfidf)
-    #     ff_tf_idf = tf_idf % 1000 >> ff_score >> FFInterpolate(alpha_tfidf)
-    #     ff_deepct = deep_ct % 1000 >> SwapQueries() >> ff_score >> FFInterpolate(alpha_deepct)
-    #     ff_splade = splade % 1000 >> SwapQueries() >> ff_score >> FFInterpolate(alpha_splade)
+    if dataset_name in ['dbpedia', 'fever']:
+        ff_bm25 = bm25 % 1000 >> Decoder() >> ff_score >> FFInterpolate(alpha_bm25)
+        ff_tf_idf = tf_idf % 1000 >> Decoder() >> ff_score >> FFInterpolate(alpha_tfidf)
+        ff_deepct = deep_ct % 1000 >> Decoder() >> SwapQueries() >> ff_score >> FFInterpolate(alpha_deepct)
+        ff_splade = splade % 1000 >> Decoder() >> SwapQueries() >> ff_score >> FFInterpolate(alpha_splade)
+    else:
+        ff_bm25 = bm25 % 1000 >> ff_score >> FFInterpolate(alpha_tfidf)
+        ff_tf_idf = tf_idf % 1000 >> ff_score >> FFInterpolate(alpha_tfidf)
+        ff_deepct = deep_ct % 1000 >> SwapQueries() >> ff_score >> FFInterpolate(alpha_deepct)
+        ff_splade = splade % 1000 >> SwapQueries() >> ff_score >> FFInterpolate(alpha_splade)
 
-    # models = [ff_bm25, ff_tf_idf, ff_deepct, ff_splade]
-    models = [pt.io.read_results(
-        Path(f'trec_runs/BM25_{dataset_name}.trec').resolve().as_posix()),
-        pt.io.read_results(
-        Path(f'trec_runs/TF-IDF_{dataset_name}.trec').resolve().as_posix()),
-        pt.io.read_results(
-        Path(f'trec_runs/DeepCT_{dataset_name}.trec').resolve().as_posix()),
-        pt.io.read_results(
-        Path(f'trec_runs/Splade_{dataset_name}.trec').resolve().as_posix()),
-        pt.io.read_results(
-        Path(f'trec_runs/unicoil_{dataset_name}.trec').resolve().as_posix()),
-        pt.io.read_results(
-        Path(f'trec_runs/deepimpact_{dataset_name}.trec').resolve().as_posix())]
+    models = [ff_bm25, ff_tf_idf, ff_deepct, ff_splade]
     models_name = ['BM25', 'TF-IDF', 'DeepCT', 'Splade', 'unicoil', 'deepimpact']
-    # models_name = []
+    
+    # The commented lines show the setup if TREC runs are evaluated
+    # models = [pt.io.read_results(
+    #     Path(f'trec_runs/BM25_{dataset_name}.trec').resolve().as_posix()),
+    #     pt.io.read_results(
+    #     Path(f'trec_runs/TF-IDF_{dataset_name}.trec').resolve().as_posix()),
+    #     pt.io.read_results(
+    #     Path(f'trec_runs/DeepCT_{dataset_name}.trec').resolve().as_posix()),
+    #     pt.io.read_results(
+    #     Path(f'trec_runs/Splade_{dataset_name}.trec').resolve().as_posix()),
+    #     pt.io.read_results(
+    #     Path(f'trec_runs/unicoil_{dataset_name}.trec').resolve().as_posix()),
+    #     pt.io.read_results(
+    #     Path(f'trec_runs/deepimpact_{dataset_name}.trec').resolve().as_posix())]
 
-    df = None
     write_to_path = f'performance/{dataset_name}.csv'
 
     eval_metrics = [R@1000, MRR@10, MAP@1000, nDCG@10]
@@ -241,10 +245,8 @@ def main():
     except:
         alpha_deepimpact = None
     
-    # alphas = [alpha_unicoil, alpha_deepimpact]
-    alphas = []
-    # models = ['unicoil', 'deepimpact']
-    models = []
+    alphas = [alpha_unicoil, alpha_deepimpact]
+    models = ['unicoil', 'deepimpact']
 
     with tqdm(total=len(models), desc=f"{dataset_name}", unit="model") as pbar:
         for model_name, alpha in zip(models, alphas):
@@ -288,8 +290,8 @@ def main():
                     subset = pt.Transformer.from_df(subset)
                     significance_testing = (subset >> ff_score >> FFInterpolate(alpha))(queries)
                     final_significance_testing = pt.model.add_ranks(significance_testing)
-                    pt.io.write_results(final_significance_testing,
-                                            f'trec_runs/{model_name}_{dataset_name}.trec', append=True)
+                    pt.io.write_results(final_significance_testing, 
+                                        f'trec_runs/{model_name}_{dataset_name}.trec', append=True)
 
             pbar.update(1)
     print(f"Experiment on {dataset_name} was successfully saved.")

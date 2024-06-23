@@ -28,10 +28,14 @@ def main():
 
     input_dir = 'trec_runs' if ff else 'trec_runs_first_stage'
 
-    bm25 = Run.from_file(Path(f"{input_dir}/BM25_{datasets_names[index]}.trec").resolve().as_posix()) 
-    tf_idf = Run.from_file(Path(f"{input_dir}/TF-IDF_{datasets_names[index]}.trec").resolve().as_posix())
-    deepct = Run.from_file(Path(f"{input_dir}/DeepCT_{datasets_names[index]}.trec").resolve().as_posix())
-    splade = Run.from_file(Path(f"{input_dir}/Splade_{datasets_names[index]}.trec").resolve().as_posix())
+    bm25 = Run.from_file(Path(
+        f"{input_dir}/BM25_{datasets_names[index]}.trec").resolve().as_posix()) 
+    tf_idf = Run.from_file(Path(
+        f"{input_dir}/TF-IDF_{datasets_names[index]}.trec").resolve().as_posix())
+    deepct = Run.from_file(Path(
+        f"{input_dir}/DeepCT_{datasets_names[index]}.trec").resolve().as_posix())
+    splade = Run.from_file(Path(
+        f"{input_dir}/Splade_{datasets_names[index]}.trec").resolve().as_posix())
     unicoil = Run.from_file(
         Path(f"{input_dir}/unicoil_{datasets_names[index]}.trec").resolve().as_posix())
     deepimpact = Run.from_file(
