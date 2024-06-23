@@ -1,0 +1,22 @@
+Latency for retrieval:
+Timeit result: 3.14 s +- 56.9 ms per loop (mean +- std. dev. of 7 runs, 1 loop each)
+There are 300 queries in the dataset.
+This comes to 10.47 ms/query 
+
+Latency for re-ranking:
+Timeit result: 4.1 s +- 121 ms per loop (mean +- std. dev. of 7 runs, 1 loop each)
+There are 300 queries in the dataset.
+This comes to 13.67 ms/query 
+
+
+Latency for retrieval:
+Timeit result: 3.17 s +- 33.4 ms per loop (mean +- std. dev. of 7 runs, 1 loop each)
+There are 300 queries in the dataset.
+This comes to 10.57 ms/query 
+
+Latency for re-ranking:
+Timeit result: 4.06 s +- 76.9 ms per loop (mean +- std. dev. of 7 runs, 1 loop each)
+There are 300 queries in the dataset.
+This comes to 13.53 ms/query 
+
+
