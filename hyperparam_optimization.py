@@ -110,8 +110,6 @@ def write_to_file(model_name, model, dataset_name, evalset, topics, qrels, alpha
     best_score = -1
 
     eval_metrics = [R@1000, MRR@10, MAP@1000, nDCG@10]
-    if dataset_name == 'msmarco-passage':
-        eval_metrics = [R@1000, MRR(rel=2)@10, MAP(rel=2)@1000, nDCG@10]
 
     from tqdm import tqdm
     with tqdm(total=len(alphas), desc=f"{model_name}, {dataset_name}", unit="alpha") as pbar:
